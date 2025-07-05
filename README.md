@@ -2,6 +2,8 @@
 
 ![Screenshot](screenshot.png)
 
+> **⚠️ 注意：** 本程序只支持 linux 系统
+
 PC Speaker Music Editor 是一个图形化界面的曲谱编辑与播放工具，使用 Python 和 Linux `beep` 命令实现。它允许用户通过简单的文本标记创建音乐，并通过计算机的内置扬声器实时播放。
 
 ## 功能特点
@@ -28,20 +30,22 @@ PC Speaker Music Editor 是一个图形化界面的曲谱编辑与播放工具�
    sudo apt-get install beep python3-tk
    ```
 
-2. 赋予权限：
+2. 将用户添加到 input 组：
    ```bash
-   sudo chmod 666 /dev/input/by-path/platform-pcspkr-event-spkr
+   sudo usermod -aG input $USER
    ```
 
-3. 克隆仓库：
+3. 重新登录系统使组变更生效
+
+4. 克隆仓库：
    ```bash
-   git clone https://github.com/yourusername/pc-speaker-music-editor.git
+   git clone https://github.com/dsy4567/pc-speaker-music-editor.git
    cd pc-speaker-music-editor
    ```
 
-4. 运行程序：
+5. 运行程序：
    ```bash
-   python3 music_editor.py
+   python3 editor.py
    ```
 
 ### 使用方法
