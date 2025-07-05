@@ -45,7 +45,7 @@ PC Speaker Music Editor 是一个图形化界面的曲谱编辑与播放工具�
 
 5. 运行程序：
    ```bash
-   python3 editor.py
+   python3 main.py
    ```
 
 ### 使用方法
