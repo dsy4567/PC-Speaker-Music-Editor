@@ -106,6 +106,8 @@ class BeepPlayer:
                         delay = int(params[0].strip())
                 except ValueError:
                     pass
+            else:
+                delay = 0
 
             # 解析第二个参数（持续时间）
             if len(params) > 1 and params[1].strip():
@@ -149,7 +151,7 @@ class MusicEditor:
 
         # 默认参数
         self.default_duration = 300  # 毫秒
-        self.default_delay = 100     # 毫秒
+        self.default_delay = 300     # 毫秒
         self.key = "C"               # 调性
 
         # 创建界面
@@ -226,7 +228,10 @@ class MusicEditor:
         for i in range(1, 8):
             ttk.Button(
                 mid_frame, text=str(i), width=3,
-                command=lambda n=i: self.insert_note(str(n), True)
+                command=lambda n=i: self.insert_note(
+                    f"{n}(*{self.delay_factor_var.get()},*{self.duration_factor_var.get()})",
+                    True
+                )
             ).pack(side=tk.LEFT, padx=2)
 
         # 低音区
@@ -236,7 +241,10 @@ class MusicEditor:
         for i in range(1, 8):
             ttk.Button(
                 low_frame, text=f"-{i}", width=3,
-                command=lambda n=i: self.insert_note(f"-{n}", True)
+                command=lambda n=i: self.insert_note(
+                    f"-{n}(*{self.delay_factor_var.get()},*{self.duration_factor_var.get()})",
+                    True
+                )
             ).pack(side=tk.LEFT, padx=2)
 
         # 高音区
@@ -246,7 +254,10 @@ class MusicEditor:
         for i in range(1, 8):
             ttk.Button(
                 high_frame, text=f"+{i}", width=3,
-                command=lambda n=i: self.insert_note(f"+{n}", True)
+                command=lambda n=i: self.insert_note(
+                    f"+{n}(*{self.delay_factor_var.get()},*{self.duration_factor_var.get()})",
+                    True
+                )
             ).pack(side=tk.LEFT, padx=2)
 
         # 参数按钮区
@@ -255,35 +266,13 @@ class MusicEditor:
 
         # 延时倍数
         ttk.Label(param_btn_frame, text="延时倍数:").grid(row=0, column=0, sticky=tk.W)
-        self.delay_factor_var = tk.StringVar(value="1.0")
+        self.delay_factor_var = tk.StringVar(value="0")
         ttk.Entry(param_btn_frame, textvariable=self.delay_factor_var, width=6).grid(row=0, column=1, padx=5)
 
         # 长音倍数
         ttk.Label(param_btn_frame, text="长音倍数:").grid(row=0, column=2, sticky=tk.W)
-        self.duration_factor_var = tk.StringVar(value="1.0")
+        self.duration_factor_var = tk.StringVar(value="1")
         ttk.Entry(param_btn_frame, textvariable=self.duration_factor_var, width=6).grid(row=0, column=3, padx=5)
-
-        # 按钮行
-        btn_row = ttk.Frame(param_btn_frame)
-        btn_row.grid(row=1, column=0, columnspan=4, pady=5)
-
-        ttk.Button(
-            btn_row, text="延时", width=6,
-            command=lambda: self.insert_note(f"(*{self.delay_factor_var.get()})", False)
-        ).pack(side=tk.LEFT, padx=2)
-
-        ttk.Button(
-            btn_row, text="长音", width=6,
-            command=lambda: self.insert_note(f"(,*{self.duration_factor_var.get()})", False)
-        ).pack(side=tk.LEFT, padx=2)
-
-        ttk.Button(
-            btn_row, text="带参数", width=6,
-            command=lambda: self.insert_note(
-                f"(*{self.delay_factor_var.get()},*{self.duration_factor_var.get()})",
-                False
-            )
-        ).pack(side=tk.LEFT, padx=2)
 
     def insert_note(self, text, add_space=True):
         """插入音符到编辑框"""
@@ -303,12 +292,15 @@ class MusicEditor:
     def load_example(self):
         """加载小星星示例"""
         self.clear()
-        example = """1 1 5 5 6 6 5
-4 4 3 3 2 2 1
-5 5 4 4 3 3 2
-5 5 4 4 3 3 2
-1 1 5 5 6 6 5
-4 4 3 3 2 2 1"""
+        example = """3(*0,*1) 2(*0,*1) 1(*0,*1) 2(*0,*1) #我有一只
+3(*0,*1) 3(*0,*1) 3(*0,*2) #小羊羔
+2(*0,*1) 2(*0,*1) 2(*0,*2) #小羊羔
+3(*0,*1) 5(*0,*1) 5(*0,*2) #小羊羔
+
+3(*0,*1) 2(*0,*1) 1(*0,*1) 2(*0,*1) #长着一身
+3(*0,*1) 3(*0,*1) 3(*0,*1) 1(*0,*1) #洁白绒毛
+2(*0,*1) 2(*0,*1) 3(*0,*1) 2(*0,*1) #洁白绒
+1(*0,*2) #毛"""
         self.score_text.insert(tk.END, example)
 
     def clear(self):
